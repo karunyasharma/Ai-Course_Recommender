@@ -1,289 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Recommender AI</title>
-    <style>
-        :root {
-            --primary-color: #2563eb; /* Modern Blue */
-            --bg-color: #f3f4f6;
-            --chat-bg: #ffffff;
-            --user-msg: #2563eb;
-            --bot-msg: #e5e7eb;
-            --text-main: #1f2937;
-            --text-light: #ffffff;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Course Recommender</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+body {
+  margin:0;
+  font-family: 'Segoe UI', sans-serif;
+  background:linear-gradient(135deg,#141e30,#243b55);
+  color:white;
+}
 
-        body {
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+/* HEADER */
+.header {
+  text-align:center;
+  padding:18px;
+  font-size:22px;
+  font-weight:bold;
+  background:rgba(0,0,0,0.3);
+}
 
-        .chat-container {
-            width: 100%;
-            max-width: 400px;
-            height: 600px;
-            background: var(--chat-bg);
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+/* HERO */
+.hero {
+  text-align:center;
+  padding:60px 20px;
+}
+.hero h1 { font-size:36px; }
+.hero p { opacity:0.7; }
 
-        .chat-header {
-            background: var(--primary-color);
-            color: var(--text-light);
-            padding: 20px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 1.2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+/* CHAT BUTTON */
+.chat-btn {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:65px;
+  height:65px;
+  background:linear-gradient(45deg,#00c6ff,#0072ff);
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor:pointer;
+  font-size:26px;
+}
 
-        .chat-header span {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 400;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
+/* CHAT BOX */
+.chat-box {
+  position:fixed;
+  bottom:100px;
+  right:20px;
+  width:360px;
+  height:520px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(12px);
+  border-radius:15px;
+  display:none;
+  flex-direction:column;
+}
 
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+/* CHAT BODY */
+.chat-body {
+  flex:1;
+  overflow-y:auto;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+}
 
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+/* MESSAGES */
+.message {
+  margin:6px 0;
+  padding:10px;
+  border-radius:12px;
+  max-width:75%;
+}
+.user {
+  background:#0072ff;
+  align-self:flex-end;
+}
+.bot {
+  background:#333;
+}
 
-        .user-message {
-            background: var(--user-msg);
-            color: var(--text-light);
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .bot-message {
-            background: var(--bot-msg);
-            color: var(--text-main);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-
-        .chat-input-area {
-            padding: 15px 20px;
-            background: var(--chat-bg);
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 25px;
-            outline: none;
-            font-size: 0.95rem;
-            transition: border 0.2s;
-        }
-
-        .chat-input:focus {
-            border-color: var(--primary-color);
-        }
-
-        .send-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .send-btn:hover {
-            background: #1d4ed8;
-            transform: scale(1.05);
-        }
-
-        .send-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* Loading Dots Animation */
-        .typing-indicator {
-            display: none;
-            align-self: flex-start;
-            background: var(--bot-msg);
-            padding: 12px 16px;
-            border-radius: 15px;
-            border-bottom-left-radius: 4px;
-        }
-
-        .dot {
-            height: 8px;
-            width: 8px;
-            background-color: #6b7280;
-            border-radius: 50%;
-            display: inline-block;
-            margin: 0 2px;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+/* FOOTER */
+.chat-footer {
+  display:flex;
+}
+.chat-footer input {
+  flex:1;
+  padding:12px;
+  border:none;
+  outline:none;
+}
+.chat-footer button {
+  padding:12px;
+  border:none;
+  background:#0072ff;
+  color:white;
+  cursor:pointer;
+}
+</style>
 </head>
+
 <body>
 
-    <div class="chat-container">
-        <div class="chat-header">
-            Course Advisor AI
-            <span>Here to help you pick the perfect classes</span>
-        </div>
-        
-        <div class="chat-messages" id="chat-messages">
-            <!-- Initial Greeting -->
-            <div class="message bot-message">
-                Hello! I am your student course recommender. Tell me about your major, interests, or what you want to learn!
-            </div>
-        </div>
+<div class="header">🎓 AI Course Assistant</div>
 
-        <div class="typing-indicator" id="typing-indicator">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-        </div>
+<div class="hero">
+  <h1>Find the Best Courses for You</h1>
+  <p>Ask anything and get AI recommendations</p>
+</div>
 
-        <div class="chat-input-area">
-            <input type="text" id="user-input" class="chat-input" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
-            <button class="send-btn" onclick="sendMessage()">
-                <svg viewBox="0 0 24 24">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
+<div class="chat-btn" onclick="toggleChat()">💬</div>
 
-    <script>
-        const chatbox = document.getElementById("chat-messages");
-        const userInput = document.getElementById("user-input");
-        const typingIndicator = document.getElementById("typing-indicator");
+<div class="chat-box" id="chatBox">
+  <div class="chat-body" id="chat"></div>
 
-        // Your exact Flowise API call
-        async function query(data) {
-            const response = await fetch(
-                "https://cloud.flowiseai.com/api/v1/prediction/62831658-e1b5-4410-a99f-8b4a885d365b",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                }
-            );
-            const result = await response.json();
-            return result;
+  <div class="chat-footer">
+    <input id="input" placeholder="Ask about courses..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+
+// YOUR FLOWISE FUNCTION
+async function query(data) {
+    const response = await fetch(
+        "https://cloud.flowiseai.com/api/v1/prediction/62831658-e1b5-4410-a99f-8b4a885d365b",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
         }
+    );
+    return response.json();
+}
 
-        function appendMessage(text, sender) {
-            const messageDiv = document.createElement("div");
-            messageDiv.classList.add("message");
-            messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
-            messageDiv.innerText = text;
-            
-            // Insert message before the typing indicator
-            chatbox.appendChild(messageDiv);
-            scrollToBottom();
-        }
+// UI FUNCTIONS
+function toggleChat(){
+  const box=document.getElementById("chatBox");
+  box.style.display = box.style.display==="flex" ? "none" : "flex";
+}
 
-        function scrollToBottom() {
-            chatbox.scrollTop = chatbox.scrollHeight;
-        }
+function add(role,text){
+  const chat=document.getElementById("chat");
+  const div=document.createElement("div");
+  div.className="message "+role;
+  div.innerText=text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
 
-        function showTyping() {
-            typingIndicator.style.display = "block";
-            chatbox.appendChild(typingIndicator); // Move to bottom
-            scrollToBottom();
-        }
+async function sendMessage(){
+  const input=document.getElementById("input");
+  const text=input.value.trim();
+  if(!text) return;
 
-        function hideTyping() {
-            typingIndicator.style.display = "none";
-        }
+  add("user", text);
+  input.value="";
 
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text) return;
+  const loading = document.createElement("div");
+  loading.className="message bot";
+  loading.innerText="Typing...";
+  document.getElementById("chat").appendChild(loading);
 
-            // 1. Show user message
-            appendMessage(text, "user");
-            userInput.value = "";
-            
-            // 2. Show typing indicator
-            showTyping();
+  try{
+    const response = await query({ question: text });
 
-            try {
-                // 3. Call your API
-                const response = await query({"question": text});
-                hideTyping();
-                
-                // Flowise usually returns the text inside a "text" key. 
-                // We fallback to JSON stringify just in case the format changes.
-                const botText = response.text || response.message || JSON.stringify(response);
-                
-                // 4. Show bot message
-                appendMessage(botText, "bot");
-            } catch (error) {
-                hideTyping();
-                console.error("Error communicating with AI:", error);
-                appendMessage("Sorry, I am having trouble connecting to the server right now. Please try again later.", "bot");
-            }
-        }
+    loading.remove();
 
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-            }
-        }
-    </script>
+    add("bot", response.text || "No response from AI");
+
+  }catch(e){
+    loading.innerText="Error connecting to server";
+  }
+}
+
+// ENTER KEY SUPPORT
+document.getElementById("input").addEventListener("keypress",e=>{
+  if(e.key==="Enter") sendMessage();
+});
+
+</script>
+
 </body>
 </html>
