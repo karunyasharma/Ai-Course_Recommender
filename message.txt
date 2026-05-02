@@ -184,7 +184,8 @@ body {
 </div>
 
 <script>
-const API = "YOUR_FLOWISE_API_URL";
+const API = "https://cloud.flowiseai.com/chatbot/62831658-e1b5-4410-a99f-8b4a885d365b
+";
 
 function toggleChat(){
   const box=document.getElementById("chatBox");
