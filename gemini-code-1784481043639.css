@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+/* HERO */
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1519389950473-47ba0277781c');
+    background-size: cover;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.hero h1 { font-size: 40px; }
+.hero p { opacity: 0.8; }
+
+/* CARDS */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 40px;
+}
+
+.card {
+    width: 260px;
+    background: white;
+    color: black;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.card:hover { transform: scale(1.05); }
+.card img { width: 100%; display: block; }
+.card div { padding: 10px; }
+
+/* CHAT BUTTON */
+.chat-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 65px;
+    height: 65px;
+    background: #0072ff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 26px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+/* CHAT BOX */
+.chat-box {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 360px;
+    height: 500px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* CHAT */
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.message {
+    margin: 6px 0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.user { background: #0072ff; margin-left: auto; }
+.bot { background: #333; margin-right: auto; }
+
+/* FOOTER */
+.chat-footer {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.chat-footer input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    outline: none;
+}
+
+.chat-footer button {
+    padding: 10px 15px;
+    border: none;
+    background: #0072ff;
+    color: white;
+    cursor: pointer;
+}
+
+.chat-footer button:hover {
+    background: #005bb5;
+}
