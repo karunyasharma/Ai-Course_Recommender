@@ -9,6 +9,8 @@ A static landing page featuring an integrated AI chatbot built with HTML, CSS, a
 
 ## Project Structure
 - `index.html`: Main HTML structure.
+- `style.css`: Styling and layout.
+- `script.js`: Chat widget functionality and API connection.
 
 ## Setup Instructions
 1. Clone the repository: `git clone <https://github.com/karunyasharma/Ai-Course_Recommender>`
